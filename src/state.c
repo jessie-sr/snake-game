@@ -24,18 +24,70 @@ static void update_head(game_state_t* state, unsigned int snum);
 /* Task 1 */
 game_state_t* create_default_state() {
   // TODO: Implement this function.
-  return NULL;
+  // Allocate memory for the default state.
+  game_state_t* default_state = (game_state_t *)malloc(sizeof(game_state_t));
+  if (default_state == NULL) {
+      perror("Failed to allcate memory");
+      exit(EXIT_FAILURE);
+  }
+
+  default_state->num_rows = 18;
+
+  // Allocate memory for the board.
+  default_state->board = (char **)malloc(default_state->num_rows*20*sizeof(char));
+  if (default_state->board == NULL) {
+      perror("Failed to allcate memory");
+      free(default_state);
+      exit(EXIT_FAILURE);
+  }
+
+  for (int r = 0; r < default_state->num_rows; r++) {
+      for (int c = 0; c < 20; c++) {
+          if (r == 0 || r == default_state->num_rows - 1 || c == 0 || c == 19) {
+              default_state->board[r][c] = '#';
+          } else if (r == 2 && c == 9) {
+              default_state->board[r][c] = '*';
+          } else {
+              default_state->board[r][c] = ' ';
+          }
+      }
+  
+  default_state->num_snakes = 1;
+
+  // Allocate memory for the snakes.
+  default_state->snakes = (snake_t *)malloc(default_state->num_snakes*sizeof(snake_t));
+  if (default_state->snakes == NULL) {
+      perror("Failed to allcate memory");
+      free(default_state);
+      exit(EXIT_FAILURE);
+  }
+
+  default_state->snakes[0].tail_row = 2;
+  default_state->snakes[0].tail_col = 2;
+  default_state->snakes[0].head_row = 2;
+  default_state->snakes[0].head_col = 4;
+  default_state->snakes[0].live = true;
+
+  return default_state;
 }
 
 /* Task 2 */
 void free_state(game_state_t* state) {
   // TODO: Implement this function.
+  free(state->board);
+  free(state->snakes);
+  free(state);
   return;
 }
 
 /* Task 3 */
 void print_board(game_state_t* state, FILE* fp) {
   // TODO: Implement this function.
+  for (int r = 0; r < state->num_rows; r++) {
+      for (int c = 0; c < 20; c++) {
+          fprintf(fp, "%c", state->board[r][c]);
+      }
+  }
   return;
 }
 
