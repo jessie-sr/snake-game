@@ -28,7 +28,7 @@ game_state_t* create_default_state() {
   // Allocate memory for the default state.
   game_state_t* default_state = (game_state_t *)malloc(sizeof(game_state_t));
   if (default_state == NULL) {
-      perror("Failed to allcate memory");
+      perror("Failed to allocate memory");
       exit(EXIT_FAILURE);
   }  
 
@@ -36,7 +36,7 @@ game_state_t* create_default_state() {
   default_state->num_snakes = 1;
   default_state->snakes = (snake_t *)malloc(default_state->num_snakes * sizeof(snake_t));
   if (default_state->snakes == NULL) {
-      perror("Failed to allcate memory");
+      perror("Failed to allocate memory");
       free(default_state);
       exit(EXIT_FAILURE);
   }
@@ -52,15 +52,16 @@ game_state_t* create_default_state() {
   // Allocate memory for the board.
   default_state->board = (char **)malloc(default_state->num_rows * sizeof(char *));
   if (default_state->board == NULL) {
-      perror("Failed to allcate memory");
+      perror("Failed to allocate memory");
       free(default_state);
       exit(EXIT_FAILURE);
   }
 
   for (int r = 0; r < default_state->num_rows; r++) {
-      default_state->board[r] = (char *)malloc(20 * sizeof(char));
+      default_state->board[r] = (char *)malloc(21 * sizeof(char));
+
       if (default_state->board[r] == NULL) {
-          perror("Failed to allcate memory");
+          perror("Failed to allocate memory");
           free(default_state->board);
           free(default_state);
           exit(EXIT_FAILURE);
@@ -81,6 +82,7 @@ game_state_t* create_default_state() {
               default_state->board[r][c] = ' ';
           }
       }
+      default_state->board[r][20] = '\0';
   }
 
   return default_state;
@@ -99,8 +101,10 @@ void free_state(game_state_t* state) {
 void print_board(game_state_t* state, FILE* fp) {
   // TODO: Implement this function.
   for (int r = 0; r < state->num_rows; r++) {
-      for (int c = 0; c < 20; c++) {
+      int c = 0;
+      while (state->board[r][c] != '\0') {
           fprintf(fp, "%c", state->board[r][c]);
+          c++;
       }
       fprintf(fp, "%c", '\n');
   }
@@ -348,7 +352,52 @@ void update_state(game_state_t* state, int (*add_food)(game_state_t* state)) {
 /* Task 5 */
 game_state_t* load_board(FILE* fp) {
   // TODO: Implement this function.
-  return NULL;
+  game_state_t* state = malloc(sizeof(game_state_t));
+  if (state == NULL) {
+      perror("Failed to allocate memory");
+      exit(EXIT_FAILURE);
+  }  
+  
+  // Initializing game state
+  state->num_rows = 0;
+  state->board = NULL;
+  state->num_snakes = 0;
+  state->snakes = NULL;
+    
+  char ch;
+  int rows = 0;
+  int cols = 0;
+  char* current_row = NULL;
+
+  while ((ch = fgetc(fp)) != EOF) {
+      // If it's a new line or the end of the file, we process the row
+      if (ch == '\n' || ch == EOF) {
+          if (current_row) { // Check if there's any content to add
+              state->board = realloc(state->board, sizeof(char*) * (rows + 1));
+              if (state->board == NULL) {
+                  perror("Failed to allocate memory");
+                  exit(EXIT_FAILURE);
+  }  
+              state->board[rows] = current_row;
+              current_row[cols] = '\0'; // null-terminate the row
+              rows++;
+              cols = 0;
+              current_row = NULL;
+          }
+      } else {
+          current_row = realloc(current_row, cols + 2); // +2: one for the new character, one for the null-terminator
+          if (current_row == NULL) {
+              perror("Failed to allocate memory"); 
+              exit(EXIT_FAILURE);
+  }  
+          current_row[cols] = ch;
+          current_row[cols + 1] = '\0';
+          cols++;
+      }
+    }
+
+    state->num_rows = rows;
+    return state;
 }
 
 /*
