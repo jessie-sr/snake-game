@@ -410,11 +410,50 @@ game_state_t* load_board(FILE* fp) {
 */
 static void find_head(game_state_t* state, unsigned int snum) {
   // TODO: Implement this function.
+  snake_t snake = state->snakes[snum];
+  int r = snake.tail_row;
+  int c = snake.tail_col;
+  char tail = state->board[r][c];
+  char head = tail;
+
+  while (!is_head(head)) {
+      r = get_next_row(r, head);
+      c = get_next_col(c, head);
+      head = state->board[r][c];
+  }
+
+  state->snakes[snum].head_row = r;
+  state->snakes[snum].head_col = c;
+
   return;
 }
 
 /* Task 6.2 */
 game_state_t* initialize_snakes(game_state_t* state) {
   // TODO: Implement this function.
-  return NULL;
+  int count = 0;
+  
+  for (int r = 0; r < state->num_rows; r++) {
+      int c = 0;
+      while (state->board[r][c] != '\0') {
+          if (is_tail(state->board[r][c])) {
+              count++;
+              state->snakes = (snake_t *)realloc(state->snakes, count * sizeof(snake_t));
+              if (state->snakes == NULL) {
+                  perror("Failed to allocate memory");
+                  exit(EXIT_FAILURE);
+              }
+
+              int snum = count - 1;
+              state->snakes[snum].tail_row = r;
+              state->snakes[snum].tail_col = c;
+              state->snakes[snum].live = true;
+              find_head(state, snum);
+          }
+          c++;
+      }
+  }
+
+  state->num_snakes = count;
+  return state;
 }
