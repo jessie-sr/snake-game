@@ -360,9 +360,9 @@ game_state_t* load_board(FILE* fp) {
   
   // Initializing game state
   state->num_rows = 0;
-  state->board = NULL;
+  state->board = malloc(sizeof(char*));
   state->num_snakes = 0;
-  state->snakes = NULL;
+  state->snakes = malloc(sizeof(char));
     
   char ch;
   int rows = 0;
