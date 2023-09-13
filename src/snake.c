@@ -51,24 +51,24 @@ int main(int argc, char* argv[]) {
         return -1;
     }
 
-    game_state_t* state = load_board(fp);
+    state = load_board(fp);
 
     // TODO: Then call initialize_snakes on the state you made
-    initialize_snakes(state);
+    state = initialize_snakes(state);
 
   } else if (io_stdin) {
     // TODO: Load the board from stdin
-    game_state_t* state = load_board(stdin);
+    state = load_board(stdin);
     if (state == NULL) {
         return -1;
     }
 
     // TODO: Then call initialize_snakes on the state you made
-    initialize_snakes(state);
+    state = initialize_snakes(state);
 
   } else {
     // TODO: Create default state
-    game_state_t* state = create_default_state();
+    state = create_default_state();
   }
 
   // TODO: Update state. Use the deterministic_food function
