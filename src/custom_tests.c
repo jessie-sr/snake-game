@@ -186,19 +186,19 @@ bool test_is_snake() {
       return false;
     }
   }
-  char testcase_1 = '#';
+  char testcase_1 = '%';
   bool output_1 = is_head(testcase_1);
   if (!assert_false("output_1", output_1)) {
     return false;
   }
 
-  char testcase_2 = ' ';//redefinition
+  char testcase_2 = ' ';
   bool output_2 = is_head(testcase_2);
   if (!assert_false("output_2", output_2)) {
     return false;
   }
 
-  char testcase_3 = 'u';
+  char testcase_3 = '#';
   bool output_3 = is_head(testcase_3);
   if (!assert_false("output_3", output_3)) {
     return false;
@@ -210,7 +210,7 @@ bool test_is_snake() {
     return false;
   }
 
-  char testcase_5 = 'm';
+  char testcase_5 = '?';
   bool output_5 = is_head(testcase_5);
   if (!assert_false("output_5", output_5)) {
     return false;
