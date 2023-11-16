@@ -23,7 +23,7 @@ This project is a C implementation of the classic Snake game. It involves creati
 - `game_state_t`: Stores the game state including the board and snake information.
 - `snake_t`: Details of each snake including position and status.
 
-## Tasks
+## Implementations
 1. **create_default_state**: Initialize the default game state.
 2. **free_state**: Free allocated memory for the game state.
 3. **print_board**: Print the game board to a file.
